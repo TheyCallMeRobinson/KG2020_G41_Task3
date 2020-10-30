@@ -1,23 +1,35 @@
 package com.company;
 
+import com.company.drawers.BresenhamLineDrawer;
 import com.company.drawers.DDALineDrawer;
 import com.company.drawers.Line;
 import com.company.drawers.LineDrawer;
-import com.company.functions.Function_1;
+import com.company.functions.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ChangeListener {
     private ArrayList<Line> lines = new ArrayList<>();
     private ScreenConverter sc = new ScreenConverter(-2, 2, 4, 4, 800, 600);
     private Line yAxis = new Line(0, -1, 0, 1);
     private Line xAxis = new Line(-1, 0, 1, 0);
     private ScreenPoint prevDrag;
     private Line currentLine;
+    private Function f = new Function_7();
+
+    public Function getF() {
+        return f;
+    }
+
+    public void setF(Function f) {
+        this.f = f;
+    }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -99,7 +111,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void paint(Graphics g) {
         BufferedImage bi = new BufferedImage(
-                getWidth(), getHeight(), BufferedImage.TYPE_3BYTE_BGR
+                getWidth(),
+                getHeight(),
+                BufferedImage.TYPE_3BYTE_BGR
         );
         sc.setScreenW(getWidth());
         sc.setScreenH(getHeight());
@@ -108,22 +122,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         bi_g.fillRect(0, 0, getWidth(), getHeight());
         bi_g.dispose();
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
-        LineDrawer ld = new DDALineDrawer(pd);
+        LineDrawer ld = new BresenhamLineDrawer(pd);
 
         drawLine(ld, xAxis);
         drawLine(ld, yAxis);
-        Function_1 f1 = new Function_1();
-        ArrayList<RealPoint> points = f1.execute(-2, 2);
-        RealPoint r1 = new RealPoint(-2, 1);
-        RealPoint r2 = new RealPoint(-1.999, 1);
-        drawLine(ld, new Line(r1, r2));
-        for(RealPoint i : points) {
-            ScreenPoint real1 = sc.r2s(i);
-            pd.setPixel(real1.getX(), real1.getY(), new Color(0,0,0));
-//            RealPoint j = new RealPoint(i.getX(),i.getY() + 0.001);
-////            ScreenPoint real2 = sc.r2s(i);
-//            drawLine(ld, new Line(i, j));
-////            pd.setPixel(r.getX(), r.getY(), new Color(0,0,0));
+
+        ArrayList<RealPoint> points = f.execute(-20, 20);
+        for(int i = 0; i < points.size() - 1; i++) {
+            RealPoint rp1 = points.get(i);
+            RealPoint rp2 = points.get(i+1);
+            drawLine(ld, new Line(rp1, rp2));
         }
         for(Line l : lines) {
             drawLine(ld, l);
@@ -135,5 +143,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     private void drawLine(LineDrawer ld, Line l) {
         ld.drawLine(sc.r2s(l.getP1()), sc.r2s(l.getP2()));
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        repaint();
     }
 }
