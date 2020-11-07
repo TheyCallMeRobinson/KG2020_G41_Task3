@@ -1,4 +1,4 @@
-package com.company;
+package com.company.drawers.linedrawer;
 
 import com.company.drawers.ArcDrawer;
 

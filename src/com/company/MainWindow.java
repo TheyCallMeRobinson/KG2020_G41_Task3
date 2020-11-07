@@ -1,6 +1,6 @@
 package com.company;
 
-import com.company.functions.*;
+import com.company.function.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,8 +29,8 @@ public class MainWindow extends JFrame {
                 mp.setF(f.get(slider.getValue()));
             }
         });
-        this.add(mp);
         controls.add(slider);
         this.add(controls);
+        this.add(mp);
     }
 }

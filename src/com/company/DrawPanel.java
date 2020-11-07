@@ -1,10 +1,11 @@
 package com.company;
 
-import com.company.drawers.BresenhamLineDrawer;
-import com.company.drawers.DDALineDrawer;
-import com.company.drawers.Line;
-import com.company.drawers.LineDrawer;
-import com.company.functions.*;
+import com.company.drawers.linedrawer.BresenhamLineDrawer;
+import com.company.drawers.linedrawer.Line;
+import com.company.drawers.pixeldrawer.BufferedImagePixelDrawer;
+import com.company.drawers.linedrawer.LineDrawer;
+import com.company.drawers.pixeldrawer.PixelDrawer;
+import com.company.function.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -21,7 +22,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private Line xAxis = new Line(-1, 0, 1, 0);
     private ScreenPoint prevDrag;
     private Line currentLine;
-    private Function f = new Function_7();
+    private Function f = new Function_3();
 
     public Function getF() {
         return f;

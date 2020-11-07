@@ -1,10 +1,10 @@
-package com.company.functions;
+package com.company.function;
 
 import com.company.RealPoint;
 
 import java.util.ArrayList;
 
-public class Function_4 implements Function {
+public class Function_5 implements Function {
     @Override
     public ArrayList<RealPoint> execute(double first, double last) {
         ArrayList<RealPoint> points = new ArrayList<>();
@@ -14,6 +14,6 @@ public class Function_4 implements Function {
     }
 
     private double getFormulaValue(double x) {
-        return Math.log(x*x + 1) / (x*x + 2);
+        return 1. / (x*x + 1);
     }
 }

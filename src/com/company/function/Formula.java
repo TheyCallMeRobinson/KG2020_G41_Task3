@@ -1,10 +1,12 @@
+package com.company.function;
+
 import java.util.*;
 
 class Formula {
     private List<String> reversePolishNotation = new ArrayList<>();
     private Map<String, Double> variables = new HashMap<>();
 
-    private String deleteSpaces(String s) { // алгоритм на защиту от дебилов, удаляет все пробелы, если таковые имеются (алгоритм хуйня, можно сделать получше)
+    private String deleteSpaces(String s) {
         char[] array = s.toCharArray();
         int count = 0;
 
@@ -26,7 +28,7 @@ class Formula {
         return new String(newArray);
     }
 
-    private List<String> divideByOperandParts(char[] array) { // деление формулы на подстроки и последующая работа с ними
+    private List<String> divideByOperandParts(char[] array) {
         List<String> str = new ArrayList<>();
 
         int i = 0;
@@ -71,7 +73,7 @@ class Formula {
         return result;
     }
 
-    public void prepare(String s) { // конвертирует формулу в обратную польскую запись, часть алгоритма спизжена с википедии
+    public void prepare(String s) {
         Stack<String> rpn = new Stack<>();
         List<String> output = new ArrayList<>();
         List<String> array = new ArrayList<>(divideByOperandParts(deleteSpaces(s).toCharArray()));
@@ -118,13 +120,6 @@ class Formula {
         Stack<Double> stack = new Stack<>();
         Scanner scn = new Scanner(System.in);
 
-        /*
-         * тут фича в том, что забивать переменные формулу можно как из main через запятую в скобках,
-         * так можно и оставить эти скобки пустые
-         * (или количество введенных значений не будет совпадать с количеством переменных)
-         * и программа попросит ввести недостающие переменные
-         * но это полная хуйня, потому что если делать графический интерфейс, то получается параша с выводом в консоль, когда есть gui
-         */
         if(v.length == 0 || v.length != variables.size()) {
             for (String i : variables.keySet()) {
                 System.out.print("Enter " + i + ": ");
@@ -138,7 +133,7 @@ class Formula {
             }
         }
 
-        // этот алгоритм скомуниздил с википедии, можно поглядеть там по запросу обратная польская запись
+
         for(int i = 0; i < reversePolishNotation.size(); i++) {
             if(isNumber(reversePolishNotation.get(i))) {
                 if(isVariable(reversePolishNotation.get(i))) {
@@ -154,8 +149,6 @@ class Formula {
 
         return stack.peek();
     }
-
-    // тут начинаются вспомогательные функции проверки на переменную/операнд/число
 
     private boolean isNumber(char ch) {
         return (!isOperand(ch) || isVariable(ch)) && ch != '(' && ch != ')';
