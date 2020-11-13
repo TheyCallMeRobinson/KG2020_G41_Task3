@@ -22,6 +22,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private Line xAxis = new Line(-1, 0, 1, 0);
     private ScreenPoint prevDrag;
     private Line currentLine;
+    private Function function;
     private ArrayList<Function> functions = new ArrayList<>();
     private double scale;
 
@@ -29,7 +30,21 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         this.addMouseWheelListener(this);
+        functions.add(new Function_1());
+        functions.add(new Function_2());
+        functions.add(new Function_3());
+        functions.add(new Function_4());
+        functions.add(new Function_5());
+        functions.add(new Function_6());
+        functions.add(new Function_7());
     }
+
+    public void setFunction(int number) {
+        function = functions.get(number);
+        repaint();
+    }
+
+    public String getFunctionForm() {return function.getForm();}
 
     @Override
     public void paint(Graphics g) {
@@ -49,7 +64,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
         if(currentLine != null)
             drawLine(ld, currentLine);
-        g.drawImage(bi, 0, 0 , null);
+        g.drawImage(bi, 0, 0, null);
     }
 
     private void drawLine(LineDrawer ld, Line l) {
@@ -92,9 +107,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         this.scale *= scale;
         sc.setW(sc.getW() * scale);
         sc.setH(sc.getH() * scale);
-        ScreenPoint mouse = new ScreenPoint(e.getX(), e.getY());
-        sc.setX((sc.getX() + sc.s2r(mouse).getX()) * scale);
-        sc.setY((sc.getY() + sc.s2r(mouse).getY()) * scale);
+        sc.setX(sc.getX() * scale);
+        sc.setY(sc.getY() * scale);
         repaint();
     }
 

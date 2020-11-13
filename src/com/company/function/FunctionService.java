@@ -10,6 +10,7 @@ public class FunctionService {
     public FunctionService(Function f) {
         this.f = f;
     }
+
     public ArrayList<RealPoint> execute(double first, double last) {
         ArrayList<RealPoint> points = new ArrayList<>();
         double step = (first - last) / 10;
