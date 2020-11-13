@@ -1,7 +1,7 @@
-package com.company.drawers.linedrawer;
+package com.company.drawer.linedrawer;
 
 import com.company.ScreenPoint;
-import com.company.drawers.pixeldrawer.PixelDrawer;
+import com.company.drawer.pixeldrawer.PixelDrawer;
 
 import java.awt.*;
 
@@ -21,8 +21,14 @@ public class BresenhamLineDrawer implements LineDrawer {
     public BresenhamLineDrawer(PixelDrawer pd) {
         this.pd = pd;
     }
-    public BresenhamLineDrawer(PixelDrawer pd, Color color) {
-        this.pd = pd;
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -77,7 +83,8 @@ public class BresenhamLineDrawer implements LineDrawer {
             }
         }
     }
-/*
+
+    /*
     private void plot4Pixels(int Cx, int Cy, int x, int y) {
         pd.setPixel(Cx + x, Cy + y, color);
         pd.setPixel(Cx + x, Cy - y, color);

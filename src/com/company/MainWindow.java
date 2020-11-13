@@ -26,7 +26,7 @@ public class MainWindow extends JFrame {
         slider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                mp.setF(f.get(slider.getValue()));
+                //mp.setF(f.get(slider.getValue()));
             }
         });
         controls.add(slider);

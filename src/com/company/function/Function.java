@@ -5,5 +5,6 @@ import com.company.RealPoint;
 import java.util.ArrayList;
 
 public interface Function {
-   ArrayList<RealPoint> execute(double first, double last);
+   //ArrayList<RealPoint> execute(double first, double last);
+   double getYValue(double x);
 }

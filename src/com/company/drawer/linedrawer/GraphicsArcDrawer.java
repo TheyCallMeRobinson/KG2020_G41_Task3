@@ -1,6 +1,6 @@
-package com.company.drawers.linedrawer;
+package com.company.drawer.linedrawer;
 
-import com.company.drawers.ArcDrawer;
+import com.company.drawer.ArcDrawer;
 
 public class GraphicsArcDrawer implements ArcDrawer {
     @Override

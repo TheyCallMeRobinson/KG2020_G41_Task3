@@ -1,7 +1,7 @@
 package com.company.function;
 
 import java.util.*;
-
+//не работает
 class Formula {
     private List<String> reversePolishNotation = new ArrayList<>();
     private Map<String, Double> variables = new HashMap<>();

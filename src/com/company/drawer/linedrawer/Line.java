@@ -1,4 +1,4 @@
-package com.company.drawers.linedrawer;
+package com.company.drawer.linedrawer;
 
 import com.company.RealPoint;
 
