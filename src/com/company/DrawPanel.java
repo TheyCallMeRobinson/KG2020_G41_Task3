@@ -17,14 +17,16 @@ import java.util.ArrayList;
 
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ChangeListener {
     private ArrayList<Line> lines = new ArrayList<>();
-    private ScreenConverter sc = new ScreenConverter(-2, 2, 4, 4, 1920, 1080);
-    private Line yAxis = new Line(0, -1, 0, 1);
-    private Line xAxis = new Line(-1, 0, 1, 0);
+    private ScreenConverter sc = new ScreenConverter(-2, 2, 4, 4, 800, 800);
     private ScreenPoint prevDrag;
     private Line currentLine;
     private Function function;
     private ArrayList<Function> functions = new ArrayList<>();
     private double scale = 1;
+
+    public double getScale() {
+        return scale;
+    }
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
@@ -76,10 +78,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         ld.setColor(new Color(131, 208, 255, 255));
         double step = sc.getW() / 12;
         for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
-            drawLine(ld, new Line(new RealPoint(i, -sc.getScreenH()), new RealPoint(i, sc.getScreenH())));
+            drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
         }
         for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
-            drawLine(ld, new Line(new RealPoint(-sc.getScreenW(), i), new RealPoint(sc.getScreenW(), i)));
+            drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
         }
     }
 
@@ -97,12 +99,21 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        repaint();
+        //repaint();
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         int clicks = e.getWheelRotation();
+        if(Math.abs(this.scale - 0.0001) < 0.00001) {
+            this.scale *= 2;
+            return;
+        }
+        if(this.scale > 1000) {
+            this.scale /= 2;
+            return;
+        }
+
         double scale = 1;
         double coef = clicks > 0 ? 0.5 : 2;
         for(int i = 0; i < Math.abs(clicks); i++)
