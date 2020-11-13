@@ -21,11 +21,19 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private ScreenPoint prevDrag;
     private Line currentLine;
     private Function function;
+    private RealPoint mouseCoordinates = new RealPoint(0, 0);
     private ArrayList<Function> functions = new ArrayList<>();
     private double scale = 1;
 
     public double getScale() {
         return scale;
+    }
+
+    public double getMouseX() {
+        return mouseCoordinates != null ? mouseCoordinates.getX() : 0;
+    }
+    public double getMouseY() {
+        return mouseCoordinates != null ? mouseCoordinates.getY() : 0;
     }
 
     public DrawPanel() {
@@ -147,7 +155,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        mouseCoordinates = sc.s2r(new ScreenPoint(e.getX(), e.getY()));
+        System.out.println(mouseCoordinates.getX() + " " + mouseCoordinates.getY());
     }
 
     @Override
