@@ -24,7 +24,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private Line currentLine;
     private Function function;
     private ArrayList<Function> functions = new ArrayList<>();
-    private double scale;
+    private double scale = 1;
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
@@ -52,12 +52,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         sc.setScreenW(getWidth());
         sc.setScreenH(getHeight());
         Graphics bi_g = bi.getGraphics();
-        bi_g.setColor(new Color(220, 220, 220));
+        bi_g.setColor(new Color(238, 238, 238));
         bi_g.fillRect(0, 0, getWidth(), getHeight());
         bi_g.dispose();
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new BresenhamLineDrawer(pd);
 
+        drawGrid(ld);
         drawAxes(ld);
         for(Line l : lines) {
             drawLine(ld, l);
@@ -72,10 +73,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
     private void drawGrid(LineDrawer ld) {
-        ld.setColor(new Color(227, 227, 255, 255 * 7 / 10));
+        ld.setColor(new Color(131, 208, 255, 255));
         double step = sc.getW() / 12;
-        for(double i = sc.getX(); i < sc.getX() + sc.getH(); i += step) {
-
+        for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
+            drawLine(ld, new Line(new RealPoint(i, -sc.getScreenH()), new RealPoint(i, sc.getScreenH())));
+        }
+        for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
+            drawLine(ld, new Line(new RealPoint(-sc.getScreenW(), i), new RealPoint(sc.getScreenW(), i)));
         }
     }
 

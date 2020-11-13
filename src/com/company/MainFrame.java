@@ -46,21 +46,13 @@ public class MainFrame extends JFrame {
         createUIComponents();
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(800, 800), new Dimension(800, 800), new Dimension(1920, 1080), 0, false));
+        graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1, true, true));
+        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(600, 600), null, new Dimension(1200, 1200), 0, false));
         drawPanel = new DrawPanel();
         graphicsPanel.add(drawPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         execute = new JButton();
         execute.setText("Draw");
         rootPanel.add(execute, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 50), new Dimension(100, 50), 0, false));
-        formulaInterpretator = new JTextArea();
-        Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());
-        if (formulaInterpretatorFont != null) formulaInterpretator.setFont(formulaInterpretatorFont);
-        formulaInterpretator.setLineWrap(false);
-        formulaInterpretator.setMargin(new Insets(10, 20, 0, 0));
-        formulaInterpretator.setText("Function");
-        formulaInterpretator.putClientProperty("html.disable", Boolean.FALSE);
-        rootPanel.add(formulaInterpretator, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
         sliderContainer = new JPanel();
         sliderContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         rootPanel.add(sliderContainer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -71,6 +63,16 @@ public class MainFrame extends JFrame {
         formulaSlider.setValueIsAdjusting(true);
         formulaSlider.putClientProperty("JSlider.isFilled", Boolean.TRUE);
         sliderContainer.add(formulaSlider, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        formulaInterpretator = new JTextArea();
+        formulaInterpretator.setBackground(new Color(-1118482));
+        Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());
+        if (formulaInterpretatorFont != null) formulaInterpretator.setFont(formulaInterpretatorFont);
+        formulaInterpretator.setForeground(new Color(-16777216));
+        formulaInterpretator.setLineWrap(false);
+        formulaInterpretator.setMargin(new Insets(10, 20, 0, 0));
+        formulaInterpretator.setText("Function");
+        formulaInterpretator.putClientProperty("html.disable", Boolean.FALSE);
+        rootPanel.add(formulaInterpretator, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
     }
 
     /**
