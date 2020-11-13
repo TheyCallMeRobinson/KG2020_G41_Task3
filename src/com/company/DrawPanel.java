@@ -70,6 +70,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         drawGrid(ld);
         drawAxes(ld);
+        drawBounds(ld);
         for(Line l : lines) {
             drawLine(ld, l);
         }
@@ -84,7 +85,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     private void drawGrid(LineDrawer ld) {
         ld.setColor(new Color(131, 208, 255, 255));
-        double step = sc.getW() / 12;
+        double step = sc.getW() / 12 / scale; // ((int)scale % 5);
         for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
             drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
         }
@@ -103,6 +104,21 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         Line yAxis = new Line(yp1, yp2);
         drawLine(ld, xAxis);
         drawLine(ld, yAxis);
+    }
+
+    private void drawBounds(LineDrawer ld) {
+        ld.setColor(Color.black);
+/*
+        Line up = new Line((int)sc.getX(), (int)sc.getY(), (int)(sc.getX() + sc.getW()), (int)sc.getY());
+        Line down = new Line((int)sc.getX(), (int)(sc.getY() - sc.getH()), (int)(sc.getX() + sc.getW()), (int)(sc.getY() - sc.getH()));
+        Line left = new Line((int)sc.getX(), (int)sc.getY(), (int)sc.getX(), (int)(sc.getY() - sc.getH()));
+        Line right = new Line((int)(sc.getX() + sc.getW()), (int)sc.getY(), (int)(sc.getX() + sc.getW()), (int)(sc.getY() - sc.getH()));
+
+        drawLine(ld, up);
+        drawLine(ld, down);
+        drawLine(ld, left);
+        drawLine(ld, right);
+*/
     }
 
     @Override

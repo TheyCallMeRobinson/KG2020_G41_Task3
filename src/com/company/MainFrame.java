@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
                 drawPanel.setFunction(formulaSlider.getValue());
-                formulaInterpretator.setText(drawPanel.getFunctionForm());
+                formulaInterpretator.setText("y = " + drawPanel.getFunctionForm());
             }
         });
         graphicsPanel.addMouseMotionListener(new MouseMotionAdapter() {
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1, false, true));
-        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(700, 700), new Dimension(700, 700), new Dimension(700, 700), 0, false));
+        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(800, 800), new Dimension(800, 800), new Dimension(800, 800), 0, false));
         drawPanel = new DrawPanel();
         graphicsPanel.add(drawPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         execute = new JButton();
@@ -71,6 +71,8 @@ public class MainFrame extends JFrame {
         formulaSlider.setValueIsAdjusting(true);
         formulaSlider.putClientProperty("JSlider.isFilled", Boolean.TRUE);
         sliderContainer.add(formulaSlider, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        debug = new JTextArea();
+        rootPanel.add(debug, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         formulaInterpretator = new JTextArea();
         formulaInterpretator.setBackground(new Color(-657931));
         Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());
@@ -81,8 +83,6 @@ public class MainFrame extends JFrame {
         formulaInterpretator.setText("Function");
         formulaInterpretator.putClientProperty("html.disable", Boolean.FALSE);
         rootPanel.add(formulaInterpretator, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
-        debug = new JTextArea();
-        rootPanel.add(debug, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
     }
 
     /**
