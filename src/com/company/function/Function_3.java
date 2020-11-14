@@ -1,11 +1,7 @@
 package com.company.function;
 
-import com.company.RealPoint;
-
-import java.util.ArrayList;
-
 public class Function_3 implements Function {
-    public double getYValue(double x) {
+    public Double getYValue(double x) {
         return Math.pow(x, 1./3) * Math.sin(x);
     }
     public String getForm() {return "x^(1/3) * sin(x)";}

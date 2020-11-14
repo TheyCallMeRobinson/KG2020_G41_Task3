@@ -15,6 +15,12 @@ public class Line {
         p2 = new RealPoint(x2, y2);
     }
 
+    public double getLength() {
+        return Math.sqrt(
+                (p1.getX() - p2.getX()) * (p1.getX() - p2.getX()) + (p1.getY() - p2.getY()) * (p1.getY() - p2.getY())
+        );
+    }
+
     public void setP1(RealPoint p1) {
         this.p1 = p1;
     }

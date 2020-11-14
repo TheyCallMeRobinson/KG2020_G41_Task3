@@ -1,9 +1,7 @@
 package com.company;
 
-import com.company.drawer.linedrawer.BresenhamLineDrawer;
-import com.company.drawer.linedrawer.Line;
+import com.company.drawer.linedrawer.*;
 import com.company.drawer.pixeldrawer.BufferedImagePixelDrawer;
-import com.company.drawer.linedrawer.LineDrawer;
 import com.company.drawer.pixeldrawer.PixelDrawer;
 import com.company.function.*;
 
@@ -17,12 +15,12 @@ import java.util.ArrayList;
 
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ChangeListener {
     private ArrayList<Line> lines = new ArrayList<>();
-    private ScreenConverter sc = new ScreenConverter(-2, 2, 4, 4, 800, 800);
-    private ScreenPoint prevDrag;
-    private Line currentLine;
-    private RealPoint mouseCoordinates = new RealPoint(0, 0);
-    private Function function;
     private ArrayList<Function> functions = new ArrayList<>();
+    private ScreenConverter sc = new ScreenConverter(-5, 5, 10, 10, 800, 800);
+    private Function function;
+    private Line currentLine;
+    private ScreenPoint prevDrag;
+    private RealPoint mouseCoordinates = new RealPoint(0, 0);
     private double scale = 1;
 
     public double getScale() {
@@ -71,6 +69,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawGrid(ld);
         drawAxes(ld);
         drawBounds(ld);
+        if(function != null)
+            drawFunction(ld);
+
         for(Line l : lines) {
             drawLine(ld, l);
         }
@@ -83,20 +84,40 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         ld.drawLine(sc.r2s(l.getP1()), sc.r2s(l.getP2()));
     }
 
+    private void drawFunction(LineDrawer ld) {
+        FunctionService.drawFunction(ld, sc, function);
+    }
+
+//    private void drawGrid(LineDrawer ld) {
+//        ld.setColor(new Color(131, 208, 255, 255));
+//        Double gridStep = scale;
+//        double step = sc.getW() / 24; // ((int)scale % 5);
+//        /*
+//         * найти правильный x start
+//         * находится около левой границы
+//         * должен при этом быть кратен 10(5, 2)
+//         * в диапазоне от левой границы - шаг до левой границы + шаг будет местом первой засечки
+//         * */
+//        for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
+//            drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
+//        }
+//        for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
+//            drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
+//        }
+//    }
+
     private void drawGrid(LineDrawer ld) {
-        ld.setColor(new Color(131, 208, 255, 255));
-        double step = sc.getW() / 12 / scale; // ((int)scale % 5);
-        /*
-         * найти правильный x start
-         * находится около левой границы
-         * должен при этом быть кратен 10(5, 2)
-         * в диапазоне от левой границы - шаг до левой границы + шаг будет местом первой засечки
-         *
-         * */
-        for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
+        ld.setColor(new Color(131, 208, 255));
+        double step = scale;
+        double xStart = sc.getX() - ((sc.getX() + step) % step);
+        double yStart = sc.getY() - ((sc.getY() + step) % step) + step;
+        double xFinish = sc.getX() + sc.getW();
+        double yFinish = sc.getY() - sc.getH();
+
+        for(double i = xStart; i < xFinish; i += step) {
             drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
         }
-        for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
+        for(double i = yStart; i > yFinish; i -= step) {
             drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
         }
     }
@@ -136,17 +157,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         int clicks = e.getWheelRotation();
-        if(Math.abs(this.scale - 0.0001) < 0.00001) {
-            this.scale *= 2;
-            return;
-        }
-        if(this.scale > 1000) {
-            this.scale /= 2;
-            return;
-        }
 
         double scale = 1;
         double coef = clicks > 0 ? 0.5 : 2;
+
+        if(this.scale - 0.1 < 0.0001 && coef < 1)
+            return;
+
+        if(this.scale > 500 && coef > 1)
+            return;
+
         for(int i = 0; i < Math.abs(clicks); i++)
             scale *= coef;
 
