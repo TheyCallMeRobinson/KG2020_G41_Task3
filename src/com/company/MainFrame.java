@@ -2,12 +2,14 @@ package com.company;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 
 public class MainFrame extends JFrame {
     private JPanel rootPanel;
@@ -17,10 +19,11 @@ public class MainFrame extends JFrame {
     private JSlider formulaSlider;
     private JPanel sliderContainer;
     private DrawPanel drawPanel;
-    private JTextArea debug;
+    private JTextPane debug;
+    private JTextArea mouse;
 
     private void createUIComponents() {
-        graphicsPanel = new DrawPanel();
+        //graphicsPanel = new DrawPanel();
     }
 
     public MainFrame() {
@@ -35,10 +38,13 @@ public class MainFrame extends JFrame {
                 formulaInterpretator.setText("y = " + drawPanel.getFunctionForm());
             }
         });
-        graphicsPanel.addMouseMotionListener(new MouseMotionAdapter() {
+        drawPanel.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                debug.setText("Mouse: " + e.getX() + "; " + e.getY());
+                Double x = drawPanel.getMouseX();
+                Double y = drawPanel.getMouseY();
+                DecimalFormat df = new DecimalFormat("0.0000");
+                debug.setText(df.format(x) + "; " + df.format(y));
             }
         });
     }
@@ -51,18 +57,13 @@ public class MainFrame extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        createUIComponents();
         rootPanel = new JPanel();
-        rootPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-        graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1, false, true));
-        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(800, 800), new Dimension(800, 800), new Dimension(800, 800), 0, false));
-        drawPanel = new DrawPanel();
-        graphicsPanel.add(drawPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        rootPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         execute = new JButton();
         execute.setText("Draw");
-        rootPanel.add(execute, new GridConstraints(1, 1, 2, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 50), new Dimension(100, 50), 0, false));
+        rootPanel.add(execute, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 50), new Dimension(100, 50), 0, false));
         sliderContainer = new JPanel();
-        sliderContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        sliderContainer.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         rootPanel.add(sliderContainer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         formulaSlider = new JSlider();
         formulaSlider.setMaximum(6);
@@ -70,9 +71,14 @@ public class MainFrame extends JFrame {
         formulaSlider.setValue(0);
         formulaSlider.setValueIsAdjusting(true);
         formulaSlider.putClientProperty("JSlider.isFilled", Boolean.TRUE);
-        sliderContainer.add(formulaSlider, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        debug = new JTextArea();
-        rootPanel.add(debug, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        sliderContainer.add(formulaSlider, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        sliderContainer.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        debug = new JTextPane();
+        Font debugFont = this.$$$getFont$$$("Courier New", -1, 14, debug.getFont());
+        if (debugFont != null) debug.setFont(debugFont);
+        panel1.add(debug, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 30), null, 0, false));
         formulaInterpretator = new JTextArea();
         formulaInterpretator.setBackground(new Color(-657931));
         Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());
@@ -83,6 +89,11 @@ public class MainFrame extends JFrame {
         formulaInterpretator.setText("Function");
         formulaInterpretator.putClientProperty("html.disable", Boolean.FALSE);
         rootPanel.add(formulaInterpretator, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
+        graphicsPanel = new JPanel();
+        graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        drawPanel = new DrawPanel();
+        graphicsPanel.add(drawPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(800, 800), new Dimension(800, 800), new Dimension(800, 800), 0, false));
     }
 
     /**

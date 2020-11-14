@@ -20,8 +20,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private ScreenConverter sc = new ScreenConverter(-2, 2, 4, 4, 800, 800);
     private ScreenPoint prevDrag;
     private Line currentLine;
-    private Function function;
     private RealPoint mouseCoordinates = new RealPoint(0, 0);
+    private Function function;
     private ArrayList<Function> functions = new ArrayList<>();
     private double scale = 1;
 
@@ -29,10 +29,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         return scale;
     }
 
-    public double getMouseX() {
+    public Double getMouseX() {
         return mouseCoordinates != null ? mouseCoordinates.getX() : 0;
     }
-    public double getMouseY() {
+    public Double getMouseY() {
         return mouseCoordinates != null ? mouseCoordinates.getY() : 0;
     }
 
@@ -86,6 +86,13 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawGrid(LineDrawer ld) {
         ld.setColor(new Color(131, 208, 255, 255));
         double step = sc.getW() / 12 / scale; // ((int)scale % 5);
+        /*
+         * найти правильный x start
+         * находится около левой границы
+         * должен при этом быть кратен 10(5, 2)
+         * в диапазоне от левой границы - шаг до левой границы + шаг будет местом первой засечки
+         *
+         * */
         for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
             drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
         }
@@ -172,7 +179,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseCoordinates = sc.s2r(new ScreenPoint(e.getX(), e.getY()));
-        System.out.println(mouseCoordinates.getX() + " " + mouseCoordinates.getY());
     }
 
     @Override
