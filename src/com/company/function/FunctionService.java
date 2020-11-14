@@ -6,6 +6,7 @@ import com.company.ScreenPoint;
 import com.company.drawer.linedrawer.Line;
 import com.company.drawer.linedrawer.LineDrawer;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class FunctionService {
@@ -15,6 +16,7 @@ public class FunctionService {
  *
  */
     public static void drawFunction(LineDrawer ld, ScreenConverter sc, Function f) {
+        ld.setColor(new Color(88, 203, 66));
         Double first = sc.getX();
         Double last = sc.getX() + sc.getW();
         Double step = (last - first) / 500;

@@ -24,6 +24,7 @@ public class MainFrame extends JFrame {
     private JTextArea mouse;
     private String mousePosition;
     private String scale;
+    private String screenMousePosition;
 
     private void createUIComponents() {
         //graphicsPanel = new DrawPanel();
@@ -46,10 +47,14 @@ public class MainFrame extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 Double x = drawPanel.getMouseX();
                 Double y = drawPanel.getMouseY();
+                int realX = e.getX();
+                int realY = e.getY();
                 DecimalFormat df = new DecimalFormat("0.0000");
                 mousePosition = df.format(x) + "; " + df.format(y);
                 scale = "\n" + "Scale: " + drawPanel.getScale();
-                debug.setText(mousePosition + scale);
+                screenMousePosition = "\n" + realX + " " + realY;
+
+                debug.setText(mousePosition + screenMousePosition + scale);
             }
         });
         drawPanel.addMouseWheelListener(new MouseWheelListener() {
@@ -57,10 +62,13 @@ public class MainFrame extends JFrame {
             public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
                 Double x = drawPanel.getMouseX();
                 Double y = drawPanel.getMouseY();
+                int realX = mouseWheelEvent.getX();
+                int realY = mouseWheelEvent.getY();
                 DecimalFormat df = new DecimalFormat("0.0000");
                 mousePosition = df.format(x) + "; " + df.format(y);
                 scale = "\n" + "Scale: " + drawPanel.getScale();
-                debug.setText(mousePosition + scale);
+                screenMousePosition = "\n" + realX + " " + realY;
+                debug.setText(mousePosition + screenMousePosition + scale);
             }
         });
     }
@@ -94,7 +102,7 @@ public class MainFrame extends JFrame {
         debug = new JTextPane();
         Font debugFont = this.$$$getFont$$$("Courier New", -1, 14, debug.getFont());
         if (debugFont != null) debug.setFont(debugFont);
-        debugFieldContainer.add(debug, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 30), null, 0, false));
+        debugFieldContainer.add(debug, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(150, 74), new Dimension(-1, 60), 0, false));
         formulaInterpretator = new JTextArea();
         formulaInterpretator.setBackground(new Color(-657931));
         Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());

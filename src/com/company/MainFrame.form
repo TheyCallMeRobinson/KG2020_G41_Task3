@@ -51,8 +51,9 @@
             <children>
               <component id="620a" class="javax.swing.JTextPane" binding="debug">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="30"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="2" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="74"/>
+                    <maximum-size width="-1" height="60"/>
                   </grid>
                 </constraints>
                 <properties>
