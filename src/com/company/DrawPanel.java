@@ -19,6 +19,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private ArrayList<Function> functions = new ArrayList<>();
     private Function function;
     private ScreenConverter sc = new ScreenConverter(-5, 5, 10, 10, 800, 800);
+    private ScreenConverter scBackup = new ScreenConverter(-5, 5, 10, 10, 800, 800);
     private Line currentLine;
     private ScreenPoint prevDrag;
     private RealPoint mouseCoordinates = new RealPoint(0, 0);
@@ -50,6 +51,12 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     public String getFunctionForm() {return function.getForm();}
     public void setFunction(int number) {
         function = functions.get(number);
+        repaint();
+    }
+    public void resetView() {
+        sc = new ScreenConverter(scBackup);
+        scale = 1;
+        scaleRotation = 1;
         repaint();
     }
 
@@ -91,24 +98,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         FunctionService.drawFunction(ld, sc, function);
     }
 
-//    private void drawGrid(LineDrawer ld) {
-//        ld.setColor(new Color(131, 208, 255, 255));
-//        Double gridStep = scale;
-//        double step = sc.getW() / 24; // ((int)scale % 5);
-//        /*
-//         * найти правильный x start
-//         * находится около левой границы
-//         * должен при этом быть кратен 10(5, 2)
-//         * в диапазоне от левой границы - шаг до левой границы + шаг будет местом первой засечки
-//         * */
-//        for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
-//            drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
-//        }
-//        for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
-//            drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
-//        }
-//    }
-
     private void drawGrid(LineDrawer ld, Graphics g) {
         ld.setColor(new Color(131, 208, 255));
         g.setColor(Color.black);
@@ -121,17 +110,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         for(double i = xStart; i < xFinish; i += step) {
             drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
             DecimalFormat df = new DecimalFormat("0.####");
-            double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX();
-            double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
             String s = df.format(i);
+            int opacity = s.length() * 3;
+            double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - opacity;
+            double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
             g.drawString(s, (int)x, (int)y);
         }
         for(double i = yStart; i > yFinish; i -= step) {
             drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
             DecimalFormat df = new DecimalFormat("0.####");
-            double x = sc.r2s(new RealPoint(sc.getX(), i)).getX();
-            double y = sc.r2s(new RealPoint(sc.getX(), i)).getY();
             String s = df.format(i);
+            if(Math.abs(i) < 0.000001) s = "0";
+            int opacity = s.length() * 7;
+            double x = sc.r2s(new RealPoint(sc.getX() + sc.getW(), i)).getX() - opacity;
+            double y = sc.r2s(new RealPoint(sc.getX(), i)).getY() + 4;
             g.drawString(s, (int)x, (int)y);
         }
 
@@ -151,17 +143,14 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     private void drawBounds(LineDrawer ld) {
         ld.setColor(Color.black);
-/*
-        Line up = new Line((int)sc.getX(), (int)sc.getY(), (int)(sc.getX() + sc.getW()), (int)sc.getY());
-        Line down = new Line((int)sc.getX(), (int)(sc.getY() - sc.getH()), (int)(sc.getX() + sc.getW()), (int)(sc.getY() - sc.getH()));
-        Line left = new Line((int)sc.getX(), (int)sc.getY(), (int)sc.getX(), (int)(sc.getY() - sc.getH()));
-        Line right = new Line((int)(sc.getX() + sc.getW()), (int)sc.getY(), (int)(sc.getX() + sc.getW()), (int)(sc.getY() - sc.getH()));
-
-        drawLine(ld, up);
-        drawLine(ld, down);
-        drawLine(ld, left);
-        drawLine(ld, right);
-*/
+        RealPoint first = new RealPoint(sc.getX(), sc.getY());
+        RealPoint second = new RealPoint(sc.getX() + sc.getW(), sc.getY());
+        RealPoint third = new RealPoint(sc.getX() + sc.getW(), sc.getY() - sc.getH());
+        RealPoint fourth = new RealPoint(sc.getX(), sc.getY() - sc.getH());
+        drawLine(ld, new Line(first, second));
+        drawLine(ld, new Line(second, third));
+        drawLine(ld, new Line(third, fourth));
+        drawLine(ld, new Line(fourth, first));
     }
 
     @Override
@@ -262,3 +251,22 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
 
 }
+/*
+    private void drawGrid(LineDrawer ld) {
+        ld.setColor(new Color(131, 208, 255, 255));
+        Double gridStep = scale;
+        double step = sc.getW() / 24; // ((int)scale % 5);
+        /*
+         * найти правильный x start
+         * находится около левой границы
+         * должен при этом быть кратен 10(5, 2)
+         * в диапазоне от левой границы - шаг до левой границы + шаг будет местом первой засечки
+         * * /
+        for(double i = (int)sc.getX() - 1; i < (int)(sc.getX() + sc.getW()) + 1; i += step) {
+            drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
+        }
+        for(double i = (int)sc.getY() + 1; i > (int)(sc.getY() - sc.getH()) - 1; i -= step) {
+            drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
+        }
+    }
+*/

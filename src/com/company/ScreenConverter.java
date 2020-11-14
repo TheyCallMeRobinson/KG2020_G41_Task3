@@ -13,6 +13,15 @@ public class ScreenConverter {
         this.screenH = screenH;
     }
 
+    public ScreenConverter(ScreenConverter sc) {
+        this.x = sc.getX();
+        this.y = sc.getY();
+        this.w = sc.getW();
+        this.h = sc.getH();
+        this.screenH = sc.getScreenH();
+        this.screenW = sc.getScreenW();
+    }
+
     public ScreenPoint r2s(RealPoint p) {
         int px = (int)((p.getX() - x) * screenW / w);
         int py = (int)((y - p.getY()) * screenH / h);
