@@ -1,4 +1,4 @@
-package com.company;
+package com.company.drawer;
 
 public class RealPoint {
     private double x, y;

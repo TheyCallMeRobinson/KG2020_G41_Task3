@@ -1,5 +1,8 @@
-package com.company;
+package com.company.gui;
 
+import com.company.drawer.RealPoint;
+import com.company.drawer.ScreenConverter;
+import com.company.drawer.ScreenPoint;
 import com.company.drawer.linedrawer.*;
 import com.company.drawer.pixeldrawer.BufferedImagePixelDrawer;
 import com.company.drawer.pixeldrawer.PixelDrawer;
@@ -37,18 +40,20 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         functions.add(new Function_5());
         functions.add(new Function_6());
         functions.add(new Function_7());
+        functions.add(new Function_custom());
     }
+
 
     public Double getScale() {
         return scale;
     }
     public Double getMouseX() {
-        return mouseCoordinates != null ? mouseCoordinates.getX() : -1;
+        return mouseCoordinates != null ? mouseCoordinates.getX() : 0;
     }
     public Double getMouseY() {
-        return mouseCoordinates != null ? mouseCoordinates.getY() : -1;
+        return mouseCoordinates != null ? mouseCoordinates.getY() : 0;
     }
-    public String getFunctionForm() {return function.getForm();}
+    public String getFunctionForm() {return function.getNotation();}
     public void setFunction(int number) {
         function = functions.get(number);
         repaint();
@@ -58,6 +63,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         scale = 1;
         scaleRotation = 1;
         repaint();
+    }
+    public void setFunctionNotation(String functionNotation) {
+        function.setFunctionNotation(functionNotation);
     }
 
     @Override
@@ -71,13 +79,17 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new BresenhamLineDrawer(pd);
 
-        drawAll(ld, bi_g);
+        try {
+            drawAll(ld, bi_g);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         bi_g.dispose();
         g.drawImage(bi, 0, 0, null);
     }
 
-    private void drawAll(LineDrawer ld, Graphics g) {
+    private void drawAll(LineDrawer ld, Graphics g) throws Exception {
         drawGrid(ld, g);
         drawAxes(ld);
         drawBounds(ld);
@@ -93,8 +105,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawLine(LineDrawer ld, Line l) {
         ld.drawLine(sc.r2s(l.getP1()), sc.r2s(l.getP2()));
     }
-
-    private void drawFunction(LineDrawer ld) {
+    private void drawFunction(LineDrawer ld) throws Exception {
         FunctionService.drawFunction(ld, sc, function);
     }
 

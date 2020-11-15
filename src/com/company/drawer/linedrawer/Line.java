@@ -1,6 +1,6 @@
 package com.company.drawer.linedrawer;
 
-import com.company.RealPoint;
+import com.company.drawer.RealPoint;
 
 public class Line {
     private RealPoint p1, p2;

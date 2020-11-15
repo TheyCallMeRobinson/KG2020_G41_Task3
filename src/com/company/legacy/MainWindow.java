@@ -1,6 +1,7 @@
-package com.company;
+package com.company.legacy;
 
 import com.company.function.*;
+import com.company.gui.DrawPanel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

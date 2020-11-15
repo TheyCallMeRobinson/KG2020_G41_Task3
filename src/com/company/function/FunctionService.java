@@ -1,21 +1,16 @@
 package com.company.function;
 
-import com.company.RealPoint;
-import com.company.ScreenConverter;
-import com.company.ScreenPoint;
-import com.company.drawer.linedrawer.Line;
+import com.company.drawer.RealPoint;
+import com.company.drawer.ScreenConverter;
+import com.company.drawer.ScreenPoint;
 import com.company.drawer.linedrawer.LineDrawer;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class FunctionService {
-/*
- * написать статический метод
- * принимающий linedrawer, screenconverter, function
- *
- */
-    public static void drawFunction(LineDrawer ld, ScreenConverter sc, Function f) {
+
+    public static void drawFunction(LineDrawer ld, ScreenConverter sc, Function f) throws Exception {
         ld.setColor(new Color(88, 203, 66));
         Double first = sc.getX();
         Double last = sc.getX() + sc.getW();

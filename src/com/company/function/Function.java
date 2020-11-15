@@ -2,6 +2,7 @@ package com.company.function;
 
 public interface Function {
    //ArrayList<RealPoint> execute(double first, double last);
-   Double getYValue(double x);
-   String getForm();
+   void setFunctionNotation(String s);
+   Double getYValue(double x) throws Exception;
+   String getNotation();
 }

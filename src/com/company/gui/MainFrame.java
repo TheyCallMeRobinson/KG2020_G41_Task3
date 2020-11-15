@@ -1,8 +1,8 @@
-package com.company;
+package com.company.gui;
 
+import com.company.gui.DrawPanel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,7 +15,7 @@ public class MainFrame extends JFrame {
     private JPanel rootPanel;
     private JButton execute;
     private JPanel graphicsPanel;
-    private JTextArea formulaInterpretator;
+    private JTextArea functionNotation;
     private JSlider formulaSlider;
     private JPanel sliderContainer;
     private DrawPanel drawPanel;
@@ -24,7 +24,6 @@ public class MainFrame extends JFrame {
     private JButton reset;
     private String mousePosition;
     private String scale;
-    private String screenMousePosition;
 
     private void createUIComponents() {
         //graphicsPanel = new DrawPanel();
@@ -39,7 +38,7 @@ public class MainFrame extends JFrame {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
                 drawPanel.setFunction(formulaSlider.getValue());
-                formulaInterpretator.setText("y = " + drawPanel.getFunctionForm());
+                functionNotation.setText(drawPanel.getFunctionForm());
             }
         });
         drawPanel.addMouseMotionListener(new MouseMotionAdapter() {
@@ -47,14 +46,10 @@ public class MainFrame extends JFrame {
             public void mouseMoved(MouseEvent e) {
                 Double x = drawPanel.getMouseX();
                 Double y = drawPanel.getMouseY();
-                int realX = e.getX();
-                int realY = e.getY();
                 DecimalFormat df = new DecimalFormat("0.0000");
                 mousePosition = df.format(x) + "; " + df.format(y);
                 scale = "\n" + "Scale: " + drawPanel.getScale();
-                screenMousePosition = "\n" + realX + " " + realY;
-
-                debug.setText(mousePosition + screenMousePosition + scale);
+                debug.setText(mousePosition + scale);
             }
         });
         drawPanel.addMouseWheelListener(new MouseWheelListener() {
@@ -62,19 +57,24 @@ public class MainFrame extends JFrame {
             public void mouseWheelMoved(MouseWheelEvent mouseWheelEvent) {
                 Double x = drawPanel.getMouseX();
                 Double y = drawPanel.getMouseY();
-                int realX = mouseWheelEvent.getX();
-                int realY = mouseWheelEvent.getY();
                 DecimalFormat df = new DecimalFormat("0.0000");
                 mousePosition = df.format(x) + "; " + df.format(y);
                 scale = "\n" + "Scale: " + drawPanel.getScale();
-                screenMousePosition = "\n" + realX + " " + realY;
-                debug.setText(mousePosition + screenMousePosition + scale);
+                debug.setText(mousePosition + scale);
             }
         });
         reset.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 drawPanel.resetView();
+            }
+        });
+        execute.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String function = functionNotation.getText();
+                drawPanel.setFunction(7);
+                drawPanel.setFunctionNotation(function);
             }
         });
     }
@@ -120,16 +120,16 @@ public class MainFrame extends JFrame {
         execute = new JButton();
         execute.setText("Draw");
         panel1.add(execute, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(100, 50), new Dimension(100, 50), 0, false));
-        formulaInterpretator = new JTextArea();
-        formulaInterpretator.setBackground(new Color(-657931));
-        Font formulaInterpretatorFont = this.$$$getFont$$$("Courier New", -1, 26, formulaInterpretator.getFont());
-        if (formulaInterpretatorFont != null) formulaInterpretator.setFont(formulaInterpretatorFont);
-        formulaInterpretator.setForeground(new Color(-16777216));
-        formulaInterpretator.setLineWrap(false);
-        formulaInterpretator.setMargin(new Insets(10, 20, 0, 0));
-        formulaInterpretator.setText("Function");
-        formulaInterpretator.putClientProperty("html.disable", Boolean.FALSE);
-        rootPanel.add(formulaInterpretator, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
+        functionNotation = new JTextArea();
+        functionNotation.setBackground(new Color(-657931));
+        Font functionNotationFont = this.$$$getFont$$$("Courier New", -1, 26, functionNotation.getFont());
+        if (functionNotationFont != null) functionNotation.setFont(functionNotationFont);
+        functionNotation.setForeground(new Color(-16777216));
+        functionNotation.setLineWrap(false);
+        functionNotation.setMargin(new Insets(10, 20, 0, 0));
+        functionNotation.setText("Function");
+        functionNotation.putClientProperty("html.disable", Boolean.FALSE);
+        rootPanel.add(functionNotation, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(-1, 50), new Dimension(-1, 50), null, 0, false));
     }
 
     /**

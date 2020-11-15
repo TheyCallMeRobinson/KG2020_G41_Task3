@@ -1,4 +1,4 @@
-package com.company;
+package com.company.drawer;
 
 public class ScreenPoint {
     private final int x, y;

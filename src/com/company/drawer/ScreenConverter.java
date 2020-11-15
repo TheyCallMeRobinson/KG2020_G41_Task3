@@ -1,4 +1,4 @@
-package com.company;
+package com.company.drawer;
 
 public class ScreenConverter {
     private double x, y, w, h;

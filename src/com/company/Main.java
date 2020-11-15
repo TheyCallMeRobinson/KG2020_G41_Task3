@@ -1,6 +1,6 @@
 package com.company;
 
-import java.util.Random;
+import com.company.gui.MainFrame;
 
 public class Main {
 
