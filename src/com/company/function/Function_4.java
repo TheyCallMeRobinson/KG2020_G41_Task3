@@ -1,7 +1,7 @@
 package com.company.function;
 
 public class Function_4 implements Function {
-    private String functionNotation = "log(x^2 + 1)\n------------\nx^2 + 2";
+    private String functionNotation = "log(x^2 + 1)/(x^2 + 2)";
     public void setFunctionNotation(String functionNotation) {
         this.functionNotation = functionNotation;
     }

@@ -5,7 +5,10 @@ import java.util.HashMap;
 public class MatchParser {
     private HashMap<String, Double> variables = new HashMap<>();
 
-    public MatchParser() {}
+    public MatchParser() {
+        variables.put("e", Math.E);
+        variables.put("pi", Math.PI);
+    }
 
     public MatchParser(String variableName, double value) {
         variables.put(variableName, value);
@@ -17,7 +20,7 @@ public class MatchParser {
 
     public Double getVariable(String variableName) {
         if (!variables.containsKey(variableName)) {
-            System.err.println("Error: Try get unexists variable '" + variableName + "'");
+            System.err.println("Error: Try get unexist variable '" + variableName + "'");
             return 0.0;
         }
         return variables.get(variableName);
@@ -145,7 +148,6 @@ public class MatchParser {
         if (i == 0) {
             throw new Exception("Can't get valid number in '" + s + "'");
         }
-
         double dPart = Double.parseDouble(s.substring(0, i));
         if (negative) dPart = -dPart;
         String restPart = s.substring(i);
@@ -161,12 +163,30 @@ public class MatchParser {
                 return new Result(Math.cos(r.acc), r.rest);
             } else if (func.equals("tan") || func.equals("tg")) {
                 return new Result(Math.tan(r.acc), r.rest);
-            } else if (func.equals("log")) {
+            } else if(func.equals("ctg")) {
+                return new Result(1./Math.tan(r.acc), r.rest);
+            } else if(func.equals("atan") || func.equals("arctg")) {
+                return new Result(Math.atan(r.acc), r.rest);
+            } else if(func.equals("arcsin") || func.equals("asin")) {
+                return new Result(Math.asin(r.acc), r.rest);
+            } else if(func.equals("arccos") || func.equals("acos")) {
+                return new Result(Math.acos(r.acc), r.rest);
+            } else if (func.equals("ln") || func.equals("log")) {
                 return new Result(Math.log(r.acc), r.rest);
+            } else if(func.equals("lg")) {
+                return new Result(Math.log10(r.acc), r.rest);
             } else if (func.equals("sqrt")) {
                 return new Result(Math.sqrt(r.acc), r.rest);
             } else if(func.equals("exp")) {
                 return new Result(Math.exp(r.acc), r.rest);
+            } else if(func.equals("abs")) {
+                return new Result(Math.abs(r.acc), r.rest);
+            } else if(func.equals("sh")) {
+                return new Result(Math.sinh(r.acc), r.rest);
+            } else if(func.equals("ch")) {
+                return new Result(Math.cosh(r.acc), r.rest);
+            } else if(func.equals("th")) {
+                return new Result(Math.tanh(r.acc), r.rest);
             }
         } catch (Exception e) {
             throw new Exception("function '" + func + "' is not defined");

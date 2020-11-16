@@ -45,7 +45,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         functions.add(new Function_custom());
     }
 
-
     public Double getScale() {
         return scale;
     }
@@ -76,7 +75,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         sc.setScreenW(getWidth());
         sc.setScreenH(getHeight());
         Graphics bi_g = bi.getGraphics();
-        bi_g.setColor(new Color(238, 238, 238));
+        bi_g.setColor(new Color(255, 255, 255));
         bi_g.fillRect(0, 0, getWidth(), getHeight());
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new BresenhamLineDrawer(pd);
@@ -93,16 +92,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawAll(LineDrawer ld, Graphics g) throws Exception {
         drawGrid(ld, g);
         drawAxes(ld);
-        drawBounds(ld);
-        if(function != null) {
-            drawFunction(ld);
-            drawFunctionValue(g);
-        }
+        //drawBounds(ld);
         ld.setColor(Color.blue);
         for(Line l : lines)
             drawLine(ld, l);
         if(currentLine != null)
             drawLine(ld, currentLine);
+        if(function != null) {
+            drawFunction(ld);
+            drawFunctionValue(g);
+        }
         drawPosition(g);
     }
 
@@ -157,16 +156,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawBounds(LineDrawer ld) {
         ld.setColor(Color.blue);
         RealPoint first = new RealPoint(sc.getX(), sc.getY());
-        RealPoint second = new RealPoint(sc.getX() + sc.getW(), sc.getY());
-        RealPoint third = new RealPoint(sc.getX() + sc.getW(), sc.getY() - sc.getH());
-        RealPoint fourth = new RealPoint(sc.getX(), sc.getY() - sc.getH());
+        RealPoint second = new RealPoint(sc.getX() + sc.getW()*0.9999, sc.getY());
+        RealPoint third = new RealPoint(sc.getX() + sc.getW()*0.9999, sc.getY() - sc.getH()*0.9999);
+        RealPoint fourth = new RealPoint(sc.getX(), sc.getY() - sc.getH()*0.9999);
         drawLine(ld, new Line(first, second));
         drawLine(ld, new Line(second, third));
         drawLine(ld, new Line(third, fourth));
         drawLine(ld, new Line(fourth, first));
     }
     private void drawPosition(Graphics g) throws Exception {
-        g.setColor(Color.white);
+        g.setColor(new Color(255, 255, 255, 128));
         DecimalFormat df = new DecimalFormat("0.0000");
         String mousePosition = (df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY())).replaceAll(",", ".");
         int width = (mousePosition.length() - 1) * 7;
@@ -280,12 +279,10 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseCoordinates = sc.s2r(new ScreenPoint(e.getX(), e.getY()));
-        //drawPosition();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // prevDrag = new ScreenPoint(e.getX(), e.getY());
     }
 
     @Override

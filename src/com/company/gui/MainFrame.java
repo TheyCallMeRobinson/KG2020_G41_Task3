@@ -3,6 +3,7 @@ package com.company.gui;
 import com.company.gui.DrawPanel;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -73,7 +74,6 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String function = functionNotation.getText();
-                System.out.println(function);
                 drawPanel.setFunction(7);
                 drawPanel.setFunctionNotation(function);
             }
