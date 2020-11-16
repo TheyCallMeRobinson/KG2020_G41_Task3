@@ -16,33 +16,34 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.LinkedList;
 
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ChangeListener {
     private ArrayList<Line> lines = new ArrayList<>();
-    private ArrayList<Function> functions = new ArrayList<>();
+    private ArrayList<Function> functionsCommon = new ArrayList<>();
     private Function function;
     private ScreenConverter sc = new ScreenConverter(-5, 5, 10, 10, 800, 800);
     private ScreenConverter scBackup = new ScreenConverter(-5, 5, 10, 10, 800, 800);
     private Line currentLine;
     private ScreenPoint prevDrag;
     private RealPoint mouseCoordinates = new RealPoint(0, 0);
-    private int scaleRotation = 1;
     private double scale = 1;
-    private Stack<Double> scaleValues = new Stack<>();
+    private int currentScale = 11;
+    private LinkedList<Double> scaleValues = new LinkedList<>();
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         this.addMouseWheelListener(this);
-        functions.add(new Function_1());
-        functions.add(new Function_2());
-        functions.add(new Function_3());
-        functions.add(new Function_4());
-        functions.add(new Function_5());
-        functions.add(new Function_6());
-        functions.add(new Function_7());
-        functions.add(new Function_custom());
+        functionsCommon.add(new Function_1());
+        functionsCommon.add(new Function_2());
+        functionsCommon.add(new Function_3());
+        functionsCommon.add(new Function_4());
+        functionsCommon.add(new Function_5());
+        functionsCommon.add(new Function_6());
+        functionsCommon.add(new Function_7());
+        functionsCommon.add(new Function_custom());
+        fillScaleValues();
     }
 
     public Double getScale() {
@@ -56,17 +57,38 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     }
     public String getFunctionForm() {return function.getNotation();}
     public void setFunction(int number) {
-        function = functions.get(number);
-        repaint();
-    }
-    public void resetView() {
-        sc = new ScreenConverter(scBackup);
-        scale = 1;
-        scaleRotation = 1;
+        function = functionsCommon.get(number);
         repaint();
     }
     public void setFunctionNotation(String functionNotation) {
         function.setFunctionNotation(functionNotation);
+    }
+    public void resetView() {
+        sc = new ScreenConverter(scBackup);
+        scale = 1;
+        currentScale = 11;
+        repaint();
+    }
+    public void clear() {
+        function = null;
+        lines = new ArrayList<>();
+        repaint();
+    }
+    public void up() {
+        sc.setY(sc.getY() + scale);
+        repaint();
+    }
+    public void down() {
+        sc.setY(sc.getY() + scale);
+        repaint();
+    }
+    public void left() {
+        sc.setX(sc.getX() - scale);
+        repaint();
+    }
+    public void right() {
+        sc.setX(sc.getX() + scale);
+        repaint();
     }
 
     @Override
@@ -79,7 +101,9 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         bi_g.fillRect(0, 0, getWidth(), getHeight());
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new BresenhamLineDrawer(pd);
-        scaleValues.push(1.);
+        Font f = new Font(Font.MONOSPACED, Font.PLAIN, 16);
+        bi_g.setFont(f);
+
         try {
             drawAll(ld, bi_g);
         } catch (Exception e) {
@@ -92,7 +116,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawAll(LineDrawer ld, Graphics g) throws Exception {
         drawGrid(ld, g);
         drawAxes(ld);
-        //drawBounds(ld);
+        drawBounds(g);
         ld.setColor(Color.blue);
         for(Line l : lines)
             drawLine(ld, l);
@@ -128,7 +152,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             int opacity = s.length() * 3;
             double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - opacity;
             double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
-            g.drawString(s, (int)x, (int)y);
+            g.drawString(s, (int)x, (int)y - 2);
         }
         for(double i = yStart; i > yFinish; i -= step) {
             drawLine(ld, new Line(new RealPoint(sc.getX(), i), new RealPoint(sc.getX() + sc.getW(), i)));
@@ -153,26 +177,19 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawLine(ld, xAxis);
         drawLine(ld, yAxis);
     }
-    private void drawBounds(LineDrawer ld) {
-        ld.setColor(Color.blue);
-        RealPoint first = new RealPoint(sc.getX(), sc.getY());
-        RealPoint second = new RealPoint(sc.getX() + sc.getW()*0.9999, sc.getY());
-        RealPoint third = new RealPoint(sc.getX() + sc.getW()*0.9999, sc.getY() - sc.getH()*0.9999);
-        RealPoint fourth = new RealPoint(sc.getX(), sc.getY() - sc.getH()*0.9999);
-        drawLine(ld, new Line(first, second));
-        drawLine(ld, new Line(second, third));
-        drawLine(ld, new Line(third, fourth));
-        drawLine(ld, new Line(fourth, first));
+    private void drawBounds(Graphics g) {
+        g.setColor(Color.blue);
+        g.drawRect(0, 0, sc.getScreenW() - 1, sc.getScreenH() - 1);
     }
-    private void drawPosition(Graphics g) throws Exception {
-        g.setColor(new Color(255, 255, 255, 128));
+    private void drawPosition(Graphics g) {
+        g.setColor(new Color(255, 255, 255, 200));
         DecimalFormat df = new DecimalFormat("0.0000");
         String mousePosition = (df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY())).replaceAll(",", ".");
-        int width = (mousePosition.length() - 1) * 7;
+        int width = (mousePosition.length() - 3) * 12;
         ScreenPoint rectScreenPosition = sc.r2s(new RealPoint(sc.getX(),sc.getY()));
-        g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 130), 30);
+        g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 180), 30);
         g.setColor(Color.blue);
-        g.drawRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 130), 30);
+        g.drawRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 180), 30);
         g.setColor(Color.black);
         String scaleValue = "x" + scale;
         g.drawString(mousePosition, rectScreenPosition.getX() + 5, rectScreenPosition.getY() + 12);
@@ -184,7 +201,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         double y = function.getYValue(mouseCoordinates.getX());
         DecimalFormat df = new DecimalFormat("0.0000");
         String resultCoordinates = (df.format(x) + "; " + df.format(y)).replaceAll("," , ".");
-        int width = (resultCoordinates.length() - 2) * 7;
+        int width = (resultCoordinates.length() - 2) * 12;
         ScreenPoint circlePos = sc.r2s(new RealPoint(x, y));
 
         g.setColor(new Color(88, 209, 67));
@@ -209,7 +226,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
         repaint();
     }
+    private void fillScaleValues() {
+        for(int i = -4; i < 0; i++)
+            for(int j = i - 1; j < (i < -2 ? i + 2 : 0); j++)
+                scaleValues.add(Math.pow(5, i) * Math.pow(2, j));
 
+        for(int i = 0; i < 4; i++)
+            for(int j = i < 2 ? 0 : i - 2; j <= i + 1; j++)
+                scaleValues.add(Math.pow(5, i) * Math.pow(2, j));
+
+    }
 
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -218,43 +244,17 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        int clicks = e.getWheelRotation();
+        int clicks = -e.getWheelRotation();
 
-        double scale = 1;
-        double coef = clicks > 0 ? 0.5 : 2;
-
-        if(this.scale - 0.001 < 0.0001 && coef < 1)
-            return;
-        if(this.scale >= 1000 && coef > 1)
+        if(clicks < 0 && currentScale == 0 || clicks > 0 && currentScale == scaleValues.size() - 1)
             return;
 
-        switch(Math.abs(scaleRotation) % 3) {
-            case 0:
-            case 1:
-                coef = clicks > 0 ? 0.5 : 2;
-                break;
-            case 2:
-                coef = clicks > 0 ? 0.4 : 2.5;
-                scaleValues.push(coef);
-                break;
-        }
-
-        if(scaleValues.peek() > 1 && coef > 1)
-            scaleValues.push(coef);
-        else if(scaleValues.peek() > 1 && coef < 1)
-            scaleValues.pop();
-        else if(scaleValues.peek() < 1 && coef < 1)
-            scaleValues.push(coef);
-        else scaleValues.pop();
-        scaleRotation += clicks > 0 ? -1 : 1;
-
-        scale *= coef;
-        this.scale *= scale;
-
-        sc.setW(sc.getW() * scale);
-        sc.setH(sc.getH() * scale);
-        sc.setX(sc.getX() * scale);
-        sc.setY(sc.getY() * scale);
+        currentScale += clicks;
+        sc.setW(sc.getW() * scaleValues.get(currentScale)/scale);
+        sc.setH(sc.getH() * scaleValues.get(currentScale)/scale);
+        sc.setX(sc.getX() * scaleValues.get(currentScale)/scale);
+        sc.setY(sc.getY() * scaleValues.get(currentScale)/scale);
+        scale = scaleValues.get(currentScale);
         repaint();
     }
 

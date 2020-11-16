@@ -1,4 +1,4 @@
-package com.company.function;
+package com.company.legacy;
 
 import java.util.*;
 //не работает

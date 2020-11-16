@@ -7,7 +7,5 @@ public class Function_3 implements Function {
         return Math.abs(Math.pow(x, 1./3)) * Math.sin(x);
     }
     public String getNotation() {return functionNotation;}
-    public void setFunctionNotation(String functionNotation) {
-        this.functionNotation = functionNotation;
-    }
+    public void setFunctionNotation(String functionNotation) {}
 }

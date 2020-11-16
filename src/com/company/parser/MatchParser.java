@@ -18,10 +18,9 @@ public class MatchParser {
         variables.put(variableName, variableValue);
     }
 
-    public Double getVariable(String variableName) {
+    public Double getVariable(String variableName) throws Exception {
         if (!variables.containsKey(variableName)) {
-            System.err.println("Error: Try get unexist variable '" + variableName + "'");
-            return 0.0;
+            throw new Exception("Error: Variable did not defined '" + variableName + "'");
         }
         return variables.get(variableName);
     }
@@ -30,12 +29,10 @@ public class MatchParser {
         s = s.replaceAll("\\s","");
         Result result = lowLevelOperation(s);
         if (!result.rest.isEmpty()) {
-            throw new Exception("Expression can't be parsed");
+            throw new Exception("Error: Expression can't be parsed");
         }
         return result.acc;
     }
-
-
 
     private Result bracket(String s) throws Exception {
         char zeroChar = s.charAt(0);
@@ -45,7 +42,7 @@ public class MatchParser {
                 r.rest = r.rest.substring(1);
             }
             catch(Exception e) {
-                throw new Exception("Error: extra open bracket" + e.getMessage());
+                throw new Exception("Error: extra bracket: " + e.getMessage());
             }
             return r;
         }
@@ -141,12 +138,12 @@ public class MatchParser {
         }
         while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')) {
             if (s.charAt(i) == '.' && ++dotCount > 1) {
-                throw new Exception("Not valid number '" + s.substring(0, i + 1) + "'");
+                throw new Exception("Error: Invalid constant '" + s.substring(0, i + 1) + "'");
             }
             i++;
         }
         if (i == 0) {
-            throw new Exception("Can't get valid number in '" + s + "'");
+            throw new Exception("Error: Can't get value in '" + s + "'");
         }
         double dPart = Double.parseDouble(s.substring(0, i));
         if (negative) dPart = -dPart;
@@ -181,15 +178,15 @@ public class MatchParser {
                 return new Result(Math.exp(r.acc), r.rest);
             } else if(func.equals("abs")) {
                 return new Result(Math.abs(r.acc), r.rest);
-            } else if(func.equals("sh")) {
+            } else if(func.equals("sh") || func.equals("sinh")) {
                 return new Result(Math.sinh(r.acc), r.rest);
-            } else if(func.equals("ch")) {
+            } else if(func.equals("ch") || func.equals("cosh")) {
                 return new Result(Math.cosh(r.acc), r.rest);
-            } else if(func.equals("th")) {
+            } else if(func.equals("th") || func.equals("tanh")) {
                 return new Result(Math.tanh(r.acc), r.rest);
             }
         } catch (Exception e) {
-            throw new Exception("function '" + func + "' is not defined");
+            throw new Exception("Error: Function '" + func + "' is not defined");
         }
         return r;
     }

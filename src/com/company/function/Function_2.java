@@ -7,7 +7,5 @@ public class Function_2 implements Function {
         return x*x*x - x*x;
     }
     public String getNotation() {return functionNotation;}
-    public void setFunctionNotation(String functionNotation) {
-        this.functionNotation = functionNotation;
-    }
+    public void setFunctionNotation(String functionNotation) {}
 }

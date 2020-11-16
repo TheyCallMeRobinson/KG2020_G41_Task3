@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
     private JTextPane debug;
     private JPanel debugFieldContainer;
     private JButton reset;
+    private JButton clearButton;
     private String mousePosition;
     private String scale;
 
@@ -78,6 +79,40 @@ public class MainFrame extends JFrame {
                 drawPanel.setFunctionNotation(function);
             }
         });
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                functionNotation.setText("Function");
+                drawPanel.clear();
+            }
+        });
+        functionNotation.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyCode() == 10) {
+                    String function = functionNotation.getText();
+                    drawPanel.setFunction(7);
+                    drawPanel.setFunctionNotation(function);
+                }
+            }
+        });
+        drawPanel.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case 37:
+                        drawPanel.left();
+                    case 38:
+                        drawPanel.up();
+                    case 39:
+                        drawPanel.right();
+                    case 40:
+                        drawPanel.down();
+                }
+            }
+        });
+        drawPanel.addFocusListener(new FocusAdapter() {
+        });
     }
 
     /**
@@ -91,7 +126,7 @@ public class MainFrame extends JFrame {
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         sliderContainer = new JPanel();
-        sliderContainer.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+        sliderContainer.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         rootPanel.add(sliderContainer, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         formulaSlider = new JSlider();
         formulaSlider.setMaximum(6);
@@ -99,17 +134,23 @@ public class MainFrame extends JFrame {
         formulaSlider.setValue(0);
         formulaSlider.setValueIsAdjusting(true);
         formulaSlider.putClientProperty("JSlider.isFilled", Boolean.TRUE);
-        sliderContainer.add(formulaSlider, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        sliderContainer.add(formulaSlider, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         debugFieldContainer = new JPanel();
         debugFieldContainer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         sliderContainer.add(debugFieldContainer, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         debug = new JTextPane();
+        debug.setEnabled(true);
         Font debugFont = this.$$$getFont$$$("Courier New", -1, 14, debug.getFont());
         if (debugFont != null) debug.setFont(debugFont);
+        debug.setVisible(false);
         debugFieldContainer.add(debug, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(150, 74), new Dimension(-1, 60), 0, false));
         reset = new JButton();
         reset.setText("Reset View");
         sliderContainer.add(reset, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        clearButton = new JButton();
+        clearButton.setHideActionText(false);
+        clearButton.setText("Clear Screen");
+        sliderContainer.add(clearButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         graphicsPanel = new JPanel();
         graphicsPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         rootPanel.add(graphicsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
