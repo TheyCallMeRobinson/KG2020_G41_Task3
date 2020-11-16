@@ -17,7 +17,7 @@ public class FunctionService {
         Double step = (last - first) / 500;
         ArrayList<RealPoint> points = new ArrayList<>();
         for(double i = first; i <= last; i += step) {
-            if(!f.getYValue(i).equals(Double.POSITIVE_INFINITY) && !f.getYValue(i).equals(Double.NEGATIVE_INFINITY))
+            if(Math.abs(f.getYValue(i)) != Double.POSITIVE_INFINITY)
                 points.add(new RealPoint(i, f.getYValue(i)));
         }
         for(int i = 0; i < points.size() - 1; i++) {

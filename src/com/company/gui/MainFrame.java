@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
                 DecimalFormat df = new DecimalFormat("0.0000");
                 mousePosition = df.format(x) + "; " + df.format(y);
                 scale = "\n" + "Scale: " + drawPanel.getScale();
-                debug.setText(mousePosition + scale);
+                debug.setText(mousePosition + scale + '\n' + e.getX() + " " + e.getY());
             }
         });
         drawPanel.addMouseWheelListener(new MouseWheelListener() {
@@ -73,6 +73,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String function = functionNotation.getText();
+                System.out.println(function);
                 drawPanel.setFunction(7);
                 drawPanel.setFunctionNotation(function);
             }

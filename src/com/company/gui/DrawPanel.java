@@ -94,31 +94,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawGrid(ld, g);
         drawAxes(ld);
         drawBounds(ld);
-        if(function != null)
+        if(function != null) {
             drawFunction(ld);
-        ld.setColor(Color.blue);
-        for(Line l : lines) {
-            drawLine(ld, l);
+            drawFunctionValue(g);
         }
+        ld.setColor(Color.blue);
+        for(Line l : lines)
+            drawLine(ld, l);
         if(currentLine != null)
             drawLine(ld, currentLine);
         drawPosition(g);
-    }
-
-    private void drawPosition(Graphics g) {
-        g.setColor(Color.white);
-        ScreenPoint rectScreenPosition = sc.r2s(new RealPoint(sc.getX(),sc.getY()));
-        g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), 130, 30);
-        g.setColor(Color.blue);
-        g.drawRect(rectScreenPosition.getX(), rectScreenPosition.getY(), 130, 30);
-        g.setColor(Color.black);
-        DecimalFormat df = new DecimalFormat("0.0000");
-        String mousePosition = df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY());
-        String scaleValue = "Scale: " + scale;
-        g.drawString(mousePosition, rectScreenPosition.getX(), rectScreenPosition.getY() + 10);
-        g.drawString(scaleValue, rectScreenPosition.getX(), rectScreenPosition.getY() + 25);
-        g.dispose();
-        repaint();
     }
 
     private void drawLine(LineDrawer ld, Line l) {
@@ -180,6 +165,52 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawLine(ld, new Line(third, fourth));
         drawLine(ld, new Line(fourth, first));
     }
+    private void drawPosition(Graphics g) throws Exception {
+        g.setColor(Color.white);
+        DecimalFormat df = new DecimalFormat("0.0000");
+        String mousePosition = (df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY())).replaceAll(",", ".");
+        int width = (mousePosition.length() - 1) * 7;
+        ScreenPoint rectScreenPosition = sc.r2s(new RealPoint(sc.getX(),sc.getY()));
+        g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 130), 30);
+        g.setColor(Color.blue);
+        g.drawRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 130), 30);
+        g.setColor(Color.black);
+        String scaleValue = "x" + scale;
+        g.drawString(mousePosition, rectScreenPosition.getX() + 5, rectScreenPosition.getY() + 12);
+        g.drawString(scaleValue, rectScreenPosition.getX() + 5, rectScreenPosition.getY() + 27);
+        repaint();
+    }
+    private void drawFunctionValue(Graphics g) throws Exception {
+        double x = mouseCoordinates.getX();
+        double y = function.getYValue(mouseCoordinates.getX());
+        DecimalFormat df = new DecimalFormat("0.0000");
+        String resultCoordinates = (df.format(x) + "; " + df.format(y)).replaceAll("," , ".");
+        int width = (resultCoordinates.length() - 2) * 7;
+        ScreenPoint circlePos = sc.r2s(new RealPoint(x, y));
+
+        g.setColor(new Color(88, 209, 67));
+        g.fillOval(circlePos.getX() - 4, circlePos.getY() - 4, 8, 8);
+        if(function.getYValue(mouseCoordinates.getX() + 0.0001) <= y) {
+            g.setColor(Color.white);
+            g.fillRect(circlePos.getX() + 10, circlePos.getY() - 23, width, 15);
+            g.setColor(Color.blue);
+            g.drawRect(circlePos.getX() + 10, circlePos.getY() - 23, width, 15);
+            g.setColor(Color.black);
+            g.drawString(resultCoordinates, circlePos.getX() + 12, circlePos.getY() - 11);
+        } else {
+            g.setColor(Color.white);
+            g.fillRect(circlePos.getX() - width - 10, circlePos.getY() - 23, width, 15);
+            g.setColor(Color.blue);
+            g.drawRect(circlePos.getX() - width - 10, circlePos.getY() - 23, width, 15);
+            g.setColor(Color.black);
+            g.drawString(resultCoordinates, circlePos.getX() - width - 8, circlePos.getY() - 11);
+        }
+
+
+
+        repaint();
+    }
+
 
     @Override
     public void stateChanged(ChangeEvent e) {

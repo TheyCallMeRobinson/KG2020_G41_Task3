@@ -136,7 +136,7 @@ public class MatchParser {
             negative = true;
             s = s.substring(1);
         }
-        while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == 'e') || s.charAt(i) == '.') {
+        while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')) {
             if (s.charAt(i) == '.' && ++dotCount > 1) {
                 throw new Exception("Not valid number '" + s.substring(0, i + 1) + "'");
             }
@@ -155,19 +155,19 @@ public class MatchParser {
 
     private Result processFunction(String func, Result r) throws Exception {
         try {
-        if (func.equals("sin")) {
-            return new Result(Math.sin(r.acc), r.rest);
-        } else if (func.equals("cos")) {
-            return new Result(Math.cos(r.acc), r.rest);
-        } else if (func.equals("tan") || func.equals("tg")) {
-            return new Result(Math.tan(r.acc), r.rest);
-        } else if (func.equals("log")) {
-            return new Result(Math.log(r.acc), r.rest);
-        } else if (func.equals("sqrt")) {
-            return new Result(Math.sqrt(r.acc), r.rest);
-        } else if(func.equals("exp")) {
-            return new Result(Math.exp(r.acc), r.rest);
-        }
+            if (func.equals("sin")) {
+                return new Result(Math.sin(r.acc), r.rest);
+            } else if (func.equals("cos")) {
+                return new Result(Math.cos(r.acc), r.rest);
+            } else if (func.equals("tan") || func.equals("tg")) {
+                return new Result(Math.tan(r.acc), r.rest);
+            } else if (func.equals("log")) {
+                return new Result(Math.log(r.acc), r.rest);
+            } else if (func.equals("sqrt")) {
+                return new Result(Math.sqrt(r.acc), r.rest);
+            } else if(func.equals("exp")) {
+                return new Result(Math.exp(r.acc), r.rest);
+            }
         } catch (Exception e) {
             throw new Exception("function '" + func + "' is not defined");
         }
