@@ -16,6 +16,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class DrawPanel extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener, ChangeListener {
     private ArrayList<Line> lines = new ArrayList<>();
@@ -28,6 +29,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private RealPoint mouseCoordinates = new RealPoint(0, 0);
     private int scaleRotation = 1;
     private double scale = 1;
+    private Stack<Double> scaleValues = new Stack<>();
 
     public DrawPanel() {
         this.addMouseMotionListener(this);
@@ -78,13 +80,12 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         bi_g.fillRect(0, 0, getWidth(), getHeight());
         PixelDrawer pd = new BufferedImagePixelDrawer(bi);
         LineDrawer ld = new BresenhamLineDrawer(pd);
-
+        scaleValues.push(1.);
         try {
             drawAll(ld, bi_g);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         bi_g.dispose();
         g.drawImage(bi, 0, 0, null);
     }
@@ -95,11 +96,29 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawBounds(ld);
         if(function != null)
             drawFunction(ld);
+        ld.setColor(Color.blue);
         for(Line l : lines) {
             drawLine(ld, l);
         }
         if(currentLine != null)
             drawLine(ld, currentLine);
+        drawPosition(g);
+    }
+
+    private void drawPosition(Graphics g) {
+        g.setColor(Color.white);
+        ScreenPoint rectScreenPosition = sc.r2s(new RealPoint(sc.getX(),sc.getY()));
+        g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), 130, 30);
+        g.setColor(Color.blue);
+        g.drawRect(rectScreenPosition.getX(), rectScreenPosition.getY(), 130, 30);
+        g.setColor(Color.black);
+        DecimalFormat df = new DecimalFormat("0.0000");
+        String mousePosition = df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY());
+        String scaleValue = "Scale: " + scale;
+        g.drawString(mousePosition, rectScreenPosition.getX(), rectScreenPosition.getY() + 10);
+        g.drawString(scaleValue, rectScreenPosition.getX(), rectScreenPosition.getY() + 25);
+        g.dispose();
+        repaint();
     }
 
     private void drawLine(LineDrawer ld, Line l) {
@@ -108,9 +127,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     private void drawFunction(LineDrawer ld) throws Exception {
         FunctionService.drawFunction(ld, sc, function);
     }
-
     private void drawGrid(LineDrawer ld, Graphics g) {
-        ld.setColor(new Color(131, 208, 255));
+        ld.setColor(new Color(158, 180, 255, 172));
         g.setColor(Color.black);
         double step = scale;
         double xStart = sc.getX() - ((sc.getX() + step) % step);
@@ -122,6 +140,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             drawLine(ld, new Line(new RealPoint(i, sc.getY()), new RealPoint(i, sc.getY() - sc.getH())));
             DecimalFormat df = new DecimalFormat("0.####");
             String s = df.format(i);
+            if(Math.abs(i) < 0.000001) s = "0";
             int opacity = s.length() * 3;
             double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - opacity;
             double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
@@ -139,7 +158,6 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         }
 
     }
-
     private void drawAxes(LineDrawer ld) {
         ld.setColor(new Color(0, 0, 0));
         RealPoint xp1 = new RealPoint(sc.getX(), 0);
@@ -151,9 +169,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         drawLine(ld, xAxis);
         drawLine(ld, yAxis);
     }
-
     private void drawBounds(LineDrawer ld) {
-        ld.setColor(Color.black);
+        ld.setColor(Color.blue);
         RealPoint first = new RealPoint(sc.getX(), sc.getY());
         RealPoint second = new RealPoint(sc.getX() + sc.getW(), sc.getY());
         RealPoint third = new RealPoint(sc.getX() + sc.getW(), sc.getY() - sc.getH());
@@ -176,12 +193,11 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         double scale = 1;
         double coef = clicks > 0 ? 0.5 : 2;
 
-        if(this.scale - 0.1 < 0.0001 && coef < 1)
+        if(this.scale - 0.001 < 0.0001 && coef < 1)
+            return;
+        if(this.scale >= 1000 && coef > 1)
             return;
 
-        if(this.scale > 500 && coef > 1)
-            return;
-        scaleRotation -= scaleRotation > 0 ? 0 : 1;
         switch(Math.abs(scaleRotation) % 3) {
             case 0:
             case 1:
@@ -189,9 +205,18 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
                 break;
             case 2:
                 coef = clicks > 0 ? 0.4 : 2.5;
+                scaleValues.push(coef);
                 break;
         }
-        scaleRotation += clicks > 0 ? 0 : 1;
+
+        if(scaleValues.peek() > 1 && coef > 1)
+            scaleValues.push(coef);
+        else if(scaleValues.peek() > 1 && coef < 1)
+            scaleValues.pop();
+        else if(scaleValues.peek() < 1 && coef < 1)
+            scaleValues.push(coef);
+        else scaleValues.pop();
+        scaleRotation += clicks > 0 ? -1 : 1;
 
         scale *= coef;
         this.scale *= scale;
@@ -224,6 +249,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseCoordinates = sc.s2r(new ScreenPoint(e.getX(), e.getY()));
+        //drawPosition();
     }
 
     @Override

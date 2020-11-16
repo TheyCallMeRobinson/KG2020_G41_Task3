@@ -32,25 +32,7 @@ public class MatchParser {
         return result.acc;
     }
 
-    private Result lowLevelOperation(String s) throws Exception {
-        Result current = highLevelOperation(s);
-        double acc = current.acc;
 
-        while (current.rest.length() > 0) {
-            if (!(current.rest.charAt(0) == '+' || current.rest.charAt(0) == '-')) break;
-
-            char sign = current.rest.charAt(0);
-            String next = current.rest.substring(1);
-
-            current = highLevelOperation(next);
-            if (sign == '+') {
-                acc += current.acc;
-            } else {
-                acc -= current.acc;
-            }
-        }
-        return new Result(acc, current.rest);
-    }
 
     private Result bracket(String s) throws Exception {
         char zeroChar = s.charAt(0);
@@ -85,25 +67,62 @@ public class MatchParser {
         return constant(s);
     }
 
-    private Result highLevelOperation(String s) throws Exception {
-        Result current = bracket(s);
-
+    private Result lowLevelOperation(String s) throws Exception {
+        Result current = highLevelOperation(s);
         double acc = current.acc;
+
+        while (current.rest.length() > 0) {
+            if (!(current.rest.charAt(0) == '+' || current.rest.charAt(0) == '-')) break;
+
+            char sign = current.rest.charAt(0);
+            String next = current.rest.substring(1);
+
+            current = highLevelOperation(next);
+            if (sign == '+') {
+                acc += current.acc;
+            } else {
+                acc -= current.acc;
+            }
+        }
+        return new Result(acc, current.rest);
+    }
+
+    private Result highLevelOperation(String s) throws Exception {
+        Result current = highestLevelOperation(s);
+        double acc = current.acc;
+
+
+        while (current.rest.length() > 0) {
+            if (!(current.rest.charAt(0) == '*' || current.rest.charAt(0) == '/')) break;
+
+            char sign = current.rest.charAt(0);
+            String next = current.rest.substring(1);
+
+            current = highLevelOperation(next);
+            if (sign == '*') {
+                acc *= current.acc;
+            } else {
+                acc /= current.acc;
+            }
+        }
+        return new Result(acc, current.rest);
+    }
+
+    private Result highestLevelOperation(String s) throws Exception {
+        Result current = bracket(s);
+        double acc = current.acc;
+
         while (true) {
             if (current.rest.length() == 0) {
                 return current;
             }
             char sign = current.rest.charAt(0);
-            if ((sign != '*' && sign != '/')) return current;
+            if (sign != '^') return current;
 
             String next = current.rest.substring(1);
             Result right = bracket(next);
 
-            if (sign == '*') {
-                acc *= right.acc;
-            } else {
-                acc /= right.acc;
-            }
+            acc = Math.pow(acc, right.acc);
 
             current = new Result(acc, right.rest);
         }
@@ -117,7 +136,7 @@ public class MatchParser {
             negative = true;
             s = s.substring(1);
         }
-        while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == '.')) {
+        while (i < s.length() && (Character.isDigit(s.charAt(i)) || s.charAt(i) == 'e') || s.charAt(i) == '.') {
             if (s.charAt(i) == '.' && ++dotCount > 1) {
                 throw new Exception("Not valid number '" + s.substring(0, i + 1) + "'");
             }
@@ -144,6 +163,10 @@ public class MatchParser {
             return new Result(Math.tan(r.acc), r.rest);
         } else if (func.equals("log")) {
             return new Result(Math.log(r.acc), r.rest);
+        } else if (func.equals("sqrt")) {
+            return new Result(Math.sqrt(r.acc), r.rest);
+        } else if(func.equals("exp")) {
+            return new Result(Math.exp(r.acc), r.rest);
         }
         } catch (Exception e) {
             throw new Exception("function '" + func + "' is not defined");

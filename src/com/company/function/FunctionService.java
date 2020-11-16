@@ -11,13 +11,13 @@ import java.util.ArrayList;
 public class FunctionService {
 
     public static void drawFunction(LineDrawer ld, ScreenConverter sc, Function f) throws Exception {
-        ld.setColor(new Color(88, 203, 66));
+        ld.setColor(new Color(88, 209, 67));
         Double first = sc.getX();
         Double last = sc.getX() + sc.getW();
         Double step = (last - first) / 500;
         ArrayList<RealPoint> points = new ArrayList<>();
         for(double i = first; i <= last; i += step) {
-            if(Math.abs(f.getYValue(i)) != Double.POSITIVE_INFINITY)
+            if(!f.getYValue(i).equals(Double.POSITIVE_INFINITY) && !f.getYValue(i).equals(Double.NEGATIVE_INFINITY))
                 points.add(new RealPoint(i, f.getYValue(i)));
         }
         for(int i = 0; i < points.size() - 1; i++) {
