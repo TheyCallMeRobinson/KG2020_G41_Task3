@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Lection 3:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Lection_3_jar</output-path>
+    <root id="archive" name="Lection 3.jar">
+      <element id="module-output" name="Lection 3" />
+      <element id="extracted-dir" path="D:/Downloads/forms_rt-7.0.3.jar" path-in-jar="/" />
+      <element id="file-copy" path="D:/Downloads/forms_rt-7.0.3.jar" />
+    </root>
+  </artifact>
+</component>

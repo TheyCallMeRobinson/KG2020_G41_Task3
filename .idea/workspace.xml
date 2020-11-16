@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Lection 3:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="39160b73-6919-446a-9334-bc62cbbd8ffd" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,21 +24,41 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="13" />
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="1iMDUAocyu7nEnPCozGVr8SGm3O" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/com/company/drawers" />
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="235" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/META-INF" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\Programms\GitHub\Lection 3\src\com\company\drawers" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Programms\GitHub\Lection 3\src\com\company\gui" />
+      <recent name="D:\Programms\GitHub\Lection 3\src\com\company" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.company.drawer.linedrawer" />
       <recent name="com.company.drawers" />
       <recent name="com.company" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Programms\GitHub\Lection 3\src\com\company" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Programms\GitHub\Lection 3\src\com\company\drawers" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -83,7 +108,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

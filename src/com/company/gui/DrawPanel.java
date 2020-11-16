@@ -149,7 +149,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             DecimalFormat df = new DecimalFormat("0.####");
             String s = df.format(i);
             if(Math.abs(i) < 0.000001) s = "0";
-            int opacity = s.length() * 3;
+            int opacity = s.length() * 5;
             double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - opacity;
             double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
             g.drawString(s, (int)x, (int)y - 2);
@@ -159,7 +159,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             DecimalFormat df = new DecimalFormat("0.####");
             String s = df.format(i);
             if(Math.abs(i) < 0.000001) s = "0";
-            int opacity = s.length() * 7;
+            int opacity = s.length() * 10;
             double x = sc.r2s(new RealPoint(sc.getX() + sc.getW(), i)).getX() - opacity;
             double y = sc.r2s(new RealPoint(sc.getX(), i)).getY() + 4;
             g.drawString(s, (int)x, (int)y);
