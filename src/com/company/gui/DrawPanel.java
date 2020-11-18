@@ -105,7 +105,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         bi_g.setFont(f);
 
         try {
-            drawAll(ld, bi_g);
+            drawAll(ld, bi_g, pd);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,7 +113,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g.drawImage(bi, 0, 0, null);
     }
 
-    private void drawAll(LineDrawer ld, Graphics g) throws Exception {
+    private void drawAll(LineDrawer ld, Graphics g, PixelDrawer pd) throws Exception {
         drawGrid(ld, g);
         drawAxes(ld);
         drawBounds(g);
@@ -149,8 +149,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             DecimalFormat df = new DecimalFormat("0.####");
             String s = df.format(i);
             if(Math.abs(i) < 0.000001) s = "0";
-            int opacity = s.length() * 5;
-            double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - opacity;
+            int indent = s.length() * 5;
+            double x = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getX() - indent;
             double y = sc.r2s(new RealPoint(i, sc.getY() - sc.getH())).getY();
             g.drawString(s, (int)x, (int)y - 2);
         }
@@ -159,8 +159,8 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             DecimalFormat df = new DecimalFormat("0.####");
             String s = df.format(i);
             if(Math.abs(i) < 0.000001) s = "0";
-            int opacity = s.length() * 10;
-            double x = sc.r2s(new RealPoint(sc.getX() + sc.getW(), i)).getX() - opacity;
+            int indent = s.length() * 10;
+            double x = sc.r2s(new RealPoint(sc.getX() + sc.getW(), i)).getX() - indent;
             double y = sc.r2s(new RealPoint(sc.getX(), i)).getY() + 4;
             g.drawString(s, (int)x, (int)y);
         }
@@ -185,7 +185,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         g.setColor(new Color(255, 255, 255, 200));
         DecimalFormat df = new DecimalFormat("0.0000");
         String mousePosition = (df.format(mouseCoordinates.getX()) + "; " + df.format(mouseCoordinates.getY())).replaceAll(",", ".");
-        int width = (mousePosition.length() - 3) * 12;
+        int width = mousePosition.length() * 10 + 5;
         ScreenPoint rectScreenPosition = sc.r2s(new RealPoint(sc.getX(),sc.getY()));
         g.fillRect(rectScreenPosition.getX(), rectScreenPosition.getY(), Math.max(width, 180), 30);
         g.setColor(Color.blue);
@@ -201,7 +201,7 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
         double y = function.getYValue(mouseCoordinates.getX());
         DecimalFormat df = new DecimalFormat("0.0000");
         String resultCoordinates = (df.format(x) + "; " + df.format(y)).replaceAll("," , ".");
-        int width = (resultCoordinates.length() - 2) * 12;
+        int width = resultCoordinates.length() * 10 + 5;
         ScreenPoint circlePos = sc.r2s(new RealPoint(x, y));
 
         g.setColor(new Color(88, 209, 67));
@@ -222,19 +222,16 @@ public class DrawPanel extends JPanel implements MouseListener, MouseMotionListe
             g.drawString(resultCoordinates, circlePos.getX() - width - 8, circlePos.getY() - 11);
         }
 
-
-
         repaint();
     }
     private void fillScaleValues() {
-        for(int i = -4; i < 0; i++)
-            for(int j = i - 1; j < (i < -2 ? i + 2 : 0); j++)
+        for(int i = -3; i <= 0; i++)
+            for(int j = i - 1; j <= (i < -2 ? i + 2 : 0); j++)
                 scaleValues.add(Math.pow(5, i) * Math.pow(2, j));
-
+        scaleValues.remove(1.);//ыыыыыыы, хз что с этим делать, формула работает так
         for(int i = 0; i < 4; i++)
             for(int j = i < 2 ? 0 : i - 2; j <= i + 1; j++)
                 scaleValues.add(Math.pow(5, i) * Math.pow(2, j));
-
     }
 
     @Override

@@ -16,8 +16,9 @@ public class FunctionService {
         Double last = sc.getX() + sc.getW();
         Double step = (last - first) / 500;
         ArrayList<RealPoint> points = new ArrayList<>();
+
         for(double i = first; i <= last; i += step)
-            if(Math.abs(f.getYValue(i)) != Double.POSITIVE_INFINITY)
+            if(Math.abs(f.getYValue(i) - f.getYValue(i + step)) > 0.000001)
                 points.add(new RealPoint(i, f.getYValue(i)));
 
         for(int i = 0; i < points.size() - 1; i++) {
@@ -26,7 +27,6 @@ public class FunctionService {
             if(sc.s2r(left).getY() > sc.getY() - 2*sc.getH() && sc.s2r(left).getY() < sc.getY() + sc.getH() && sc.s2r(right).getY() > sc.getY() - 2*sc.getH() && sc.s2r(right).getY() < sc.getY() + sc.getH()) {
                 ld.drawLine(left, right);
             }
-
         }
     }
 }
